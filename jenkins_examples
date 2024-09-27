@@ -48,9 +48,9 @@ pipeline {
 }
 
 
-##############################################
-###############   day 2   ####################
-##############################################
+##########################################################################################################
+							day 2
+##########################################################################################################
 
 
 pipeline {
@@ -96,4 +96,77 @@ pipeline {
 			}
 		}
 	}
+}
+##############################################################################################################
+					git connectivity examples
+##############################################################################################################
+reference1 
+
+pipeline {
+    agent none
+    stages {
+        stage('Validate Commit Messages') {
+            agent {
+                label "${env.BRANCH_NAME == 'main' ? 'slave-1' : env.BRANCH_NAME == 'test' ? 'slave-2' : 'slave-3'}"
+            }
+            steps {
+                script {
+                    def commitMessage = sh(
+                        script: "git log -1 --pretty=%B",
+                        returnStdout: true
+                    ).trim()
+
+                    // Validate commit message based on the branch
+                    if (env.BRANCH_NAME == 'main' && !commitMessage.contains("prod server")) {
+                        error "Main branch requires 'prod server' in the commit message."
+                    } else if (env.BRANCH_NAME == 'test' && !commitMessage.contains("testing server")) {
+                        error "Test branch requires 'testing server' in the commit message."
+                    } else if (env.BRANCH_NAME == 'dev' && !commitMessage.contains("development server")) {
+                        error "Dev branch requires 'development server' in the commit message."
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            agent {
+                label "${env.BRANCH_NAME == 'main' ? 'slave-1' : env.BRANCH_NAME == 'test' ? 'slave-2' : 'slave-3'}"
+            }
+            steps {
+                dir('/project1/workspace/pipeline') {
+                    sh 'docker-compose up --build -d'
+                }
+            }
+        }
+        stage('Check Website Availability') {
+            agent {
+                label "${env.BRANCH_NAME == 'main' ? 'slave-1' : env.BRANCH_NAME == 'test' ? 'slave-2' : 'slave-3'}"
+            }
+            steps {
+                script {
+                    def url = ''
+                    
+                    // Set the URL based on the branch
+                    if (env.BRANCH_NAME == 'main') {
+                        url = 'http://main-server-url.com'
+                    } else if (env.BRANCH_NAME == 'test') {
+                        url = 'http://test-server-url.com'
+                    } else if (env.BRANCH_NAME == 'dev') {
+                        url = 'http://dev-server-url.com'
+                    }
+
+                    def response = sh(
+                        script: "curl -o /dev/null -s -w \"%{http_code}\" ${url}",
+                        returnStdout: true
+                    ).trim()
+
+                    // Validate the HTTP response code
+                    if (response != '200') {
+                        error "Website is not accessible for branch ${env.BRANCH_NAME}. HTTP status code: ${response}"
+                    } else {
+                        echo "Website is accessible for branch ${env.BRANCH_NAME}. HTTP code: ${response}"
+                    }
+                }
+            }
+        }
+    }
 }
