@@ -170,3 +170,49 @@ pipeline {
         }
     }
 }
+
+
+
+
+################################################################################################
+
+
+pipeline {
+    agent { label 'likesh' }  // Specify the 'hari' node
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main',
+                    credentialsId: 'JENKINS_LIKESH',  // Ensure this matches your GitHub credentials ID in Jenkins
+                    url: 'https://github.com/Hariveerj/Hari.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image using the repository name as the tag
+                    def dockerImage = docker.build("hari4281/jenkins:${env.BUILD_NUMBER}")
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Use your Docker Hub ID directly if 'dockerhub-credentials' refers to it
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                        def dockerImage = docker.image("hari4281/jenkins:${env.BUILD_NUMBER}")
+                        dockerImage.push()
+                        // Optionally, push the 'latest' tag as well
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            // Clean up the workspace after the build
+            cleanWs()
+        }
+    }
+}
