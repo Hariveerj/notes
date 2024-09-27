@@ -1,0 +1,35 @@
+git clone <repository_url>	                  Clone a repository.
+
+git status	                                  Check the status of the repository.
+
+git add <file_name>	                          Add changes to staging.
+
+git add .	                                    Add all files to staging.
+
+git commit -m "Commit message"	              Commit changes with a message.
+
+git push origin <branch_name>	                Push changes to the remote repository.
+
+git pull origin <branch_name>	                Pull changes from the remote repository.
+
+git checkout -b <new_branch_name>	            Create a new branch and switch to it.
+
+git checkout <branch_name>	                  Switch to an existing branch.
+
+git branch	                                  List all branches.
+
+git branch -d <branch_name>	                  Delete a branch.
+
+git remote add origin <repository_url>	      Add a remote repository.
+
+git remote -v	                                View remote repositories.
+
+git merge <branch_name>	                      Merge a branch into the current branch.
+
+git rebase <branch_name>	                    Rebase a branch.
+
+git checkout -- <file_name>	                  Discard changes in a file.
+
+git reset <file_name>	                        Unstage a file.
+
+git reset --hard	                            Reset to the last commit.
