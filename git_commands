@@ -14,6 +14,8 @@ git pull origin <branch_name>	                Pull changes from the remote repos
 
 git checkout -b <new_branch_name>	            Create a new branch and switch to it.
 
+git log                                       to check the log versions
+
 git checkout <branch_name>	                  Switch to an existing branch.
 
 git branch	                                  List all branches.
@@ -26,10 +28,10 @@ git remote -v	                                View remote repositories.
 
 git merge <branch_name>	                      Merge a branch into the current branch.
 
-git rebase <branch_name>	                    Rebase a branch.
-
 git checkout -- <file_name>	                  Discard changes in a file.
 
-git reset <file_name>	                        Unstage a file.
+git cherry-pick <commit_hash>	                Apply the changes from the specified commit to the current branch.
 
-git reset --hard	                            Reset to the last commit.
+git reset <file_name>	                        Unstage a file.                             ########    rare     #########
+
+git reset --hard	                            Reset to the last commit.                   ########    rare     #########
