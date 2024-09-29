@@ -1,5 +1,7 @@
 #!/bin/bash
+
 ####################  java is mandatory for the jenkins and master and node configration   #####################
+
 # Update package list
 apt update
 
@@ -8,7 +10,9 @@ apt install -y fontconfig openjdk-17-jre
 
 # Verify Java installation
 java -version
+
 ################################################################################################################
+
 # Download Jenkins keyring
 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
   https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
