@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo "=============================="
+echo "   Installing Ansible on Ubuntu"
+echo "=============================="
+
+# Update system
+sudo apt update -y
+sudo apt install -y software-properties-common
+
+# Add Ansible PPA
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+
+# Install Ansible
+sudo apt install -y ansible
+
+# Verify
+echo "=============================="
+echo "   Ansible Version Installed"
+echo "=============================="
+ansible --version
