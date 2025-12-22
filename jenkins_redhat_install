@@ -1,0 +1,28 @@
+#!/bin/bash
+# Jenkins Installation Script for RHEL-based systems
+# Uses yum only
+
+set -e
+
+echo "=== Installing Java 17 ==="
+yum install -y java-17-openjdk
+
+echo "=== Adding Jenkins Repository ==="
+curl -fsSL https://pkg.jenkins.io/redhat-stable/jenkins.repo \
+  -o /etc/yum.repos.d/jenkins.repo
+
+echo "=== Importing Jenkins GPG Key ==="
+rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+echo "=== Installing Jenkins ==="
+yum install -y jenkins
+
+echo "=== Enabling and Starting Jenkins Service ==="
+systemctl enable jenkins
+systemctl start jenkins
+
+echo "=== Jenkins Service Status ==="
+systemctl status jenkins --no-pager
+
+echo "=== Jenkins Initial Admin Password ==="
+cat /var/lib/jenkins/secrets/initialAdminPassword
